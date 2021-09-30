@@ -1,21 +1,17 @@
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StatusBar} from 'react-native';
+import MainNavigator from './src/navigation/MainNavigator';
 
-const App = () => {
+export default function App() {
   return (
-    <View style={styles.root}>
-      <Text>Hello world!!!</Text>
-    </View>
+    <NavigationContainer>
+      <StatusBar
+        backgroundColor={'rgba(0, 0, 0, 0.3)'}
+        showHideTransition={'slide'}
+        translucent={true}
+      />
+      <MainNavigator />
+    </NavigationContainer>
   );
-};
-
-export default App;
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-  },
-});
+}
