@@ -1,30 +1,28 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Appbar as PaperAppbar, IconButton, Text} from 'react-native-paper';
+import {Appbar as PaperAppbar, IconButton} from 'react-native-paper';
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   Extrapolate,
 } from 'react-native-reanimated';
-import {IMAGE_MAX_SIZE} from './GoogleConfig';
 
 const ICON_BOX_WIDTH = 70;
+const IMAGE_MIN_SIZE: number = 20;
 
 type AppbarProps = {
-  scrollY: Animated.SharedValue<number>;
   translateY: Animated.SharedValue<number>;
-  isScrolling: Animated.SharedValue<boolean>;
 };
 
-const Appbar: React.FC<AppbarProps> = ({scrollY, translateY, isScrolling}) => {
+const Appbar: React.FC<AppbarProps> = ({translateY}) => {
   const appBarContentWidth = useSharedValue<number>(0);
 
   const rIconBoxStyles = useAnimatedStyle(() => {
     const width = interpolate(
       translateY.value,
-      [0, ICON_BOX_WIDTH],
-      [ICON_BOX_WIDTH, ICON_BOX_WIDTH + 55],
+      [0, -ICON_BOX_WIDTH],
+      [ICON_BOX_WIDTH, ICON_BOX_WIDTH + IMAGE_MIN_SIZE * 2.3],
       Extrapolate.CLAMP,
     );
 
@@ -34,12 +32,12 @@ const Appbar: React.FC<AppbarProps> = ({scrollY, translateY, isScrolling}) => {
   const rTextStyles = useAnimatedStyle(() => {
     const width = interpolate(
       translateY.value,
-      [0, ICON_BOX_WIDTH],
+      [0, -ICON_BOX_WIDTH],
       [0, ICON_BOX_WIDTH],
       Extrapolate.CLAMP,
     );
 
-    const maxWidth = appBarContentWidth.value - ICON_BOX_WIDTH - width - 10;
+    const maxWidth = appBarContentWidth.value - ICON_BOX_WIDTH - width;
 
     return {maxWidth};
   });
