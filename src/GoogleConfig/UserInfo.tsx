@@ -1,11 +1,20 @@
 import React from 'react';
+import Appbar from './Appbar';
 import {View, Text, StyleSheet, useWindowDimensions, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated, {
   Extrapolate,
   interpolate,
+  useAnimatedGestureHandler,
   useAnimatedStyle,
+  withTiming,
 } from 'react-native-reanimated';
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
+import {snapPoint} from 'react-native-redash';
+import {Divider} from 'react-native-paper';
 
 const MAGNUM_BULLETS = require('./assets/bullets.png');
 const GOOGLE = require('./assets/google.png');
@@ -21,6 +30,22 @@ type UserInfoProps = {
 const UserInfo: React.FC<UserInfoProps> = ({translateY}) => {
   const {width} = useWindowDimensions();
 
+  const onGestureEvent = useAnimatedGestureHandler<
+    PanGestureHandlerGestureEvent,
+    {y: number}
+  >({
+    onStart: (_, ctx) => {
+      ctx.y = translateY.value;
+    },
+    onActive: ({translationY}, ctx) => {
+      translateY.value = ctx.y + translationY;
+    },
+    onEnd: ({velocityY}) => {
+      const snap = snapPoint(translateY.value, velocityY, [-100, 0]);
+      translateY.value = withTiming(snap);
+    },
+  });
+
   const rImageStyles = useAnimatedStyle(() => {
     const size = interpolate(
       translateY.value,
@@ -29,14 +54,14 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY}) => {
       Extrapolate.CLAMP,
     );
 
-    const tx = interpolate(
+    const left = interpolate(
       translateY.value,
       [0, -100],
-      [0, width / 2 - size / 2 - PADDING],
+      [width / 2 - size / 2, width - size - PADDING],
       Extrapolate.CLAMP,
     );
 
-    const ty = interpolate(
+    const top = interpolate(
       translateY.value,
       [0, -100],
       [0, -45],
@@ -44,13 +69,24 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY}) => {
     );
 
     return {
-      zIndex: 200,
+      zIndex: 2000,
       width: size,
       height: size,
       borderRadius: size / 2,
-      transform: [{translateX: tx}, {translateY: ty}],
+      position: 'absolute',
+      top,
+      left,
     };
   });
+
+  const rBox = useAnimatedStyle(() => ({
+    height: interpolate(
+      translateY.value,
+      [0, -100],
+      [200, 0],
+      Extrapolate.CLAMP,
+    ),
+  }));
 
   const rUserInfoStyles = useAnimatedStyle(() => {
     const opacity = interpolate(
@@ -62,8 +98,8 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY}) => {
 
     const ty = interpolate(
       translateY.value,
-      [0, -100],
-      [0, -100],
+      [0, -75],
+      [0, -150],
       Extrapolate.CLAMP,
     );
 
@@ -74,20 +110,31 @@ const UserInfo: React.FC<UserInfoProps> = ({translateY}) => {
   });
 
   return (
-    <Animated.View style={[styles.root]}>
-      <Animated.Image source={MAGNUM_BULLETS} style={rImageStyles} />
-      <Animated.View style={[styles.userInfo, rUserInfoStyles]}>
-        <Text style={styles.username}>Centurion</Text>
-        <View style={styles.emailbox}>
-          <Text style={styles.email}>centurion@gmail.com</Text>
-          <Icon name={'chevron-down'} size={20} color="grey" />
-        </View>
-        <View style={styles.googleBox}>
-          <Image source={GOOGLE} style={styles.google} />
-          <Text style={styles.infoText}>Administra tu cuenta de google</Text>
-        </View>
+    <PanGestureHandler onGestureEvent={onGestureEvent}>
+      <Animated.View>
+        <Appbar translateY={translateY} />
+        <Animated.View style={[styles.root]}>
+          <Animated.Image source={MAGNUM_BULLETS} style={rImageStyles} />
+          <Animated.View style={rBox}>
+            <Animated.View style={[styles.userInfo, rUserInfoStyles]}>
+              <View style={styles.placeholder} />
+              <Text style={styles.username}>Centurion</Text>
+              <View style={styles.emailbox}>
+                <Text style={styles.email}>centurion@gmail.com</Text>
+                <Icon name={'chevron-down'} size={20} color="grey" />
+              </View>
+              <View style={styles.googleBox}>
+                <Image source={GOOGLE} style={styles.google} />
+                <Text style={styles.infoText}>
+                  Administra tu cuenta de google
+                </Text>
+              </View>
+            </Animated.View>
+          </Animated.View>
+        </Animated.View>
+        <Divider />
       </Animated.View>
-    </Animated.View>
+    </PanGestureHandler>
   );
 };
 
@@ -95,10 +142,13 @@ export default UserInfo;
 
 const styles = StyleSheet.create({
   root: {
-    paddingBottom: PADDING,
     paddingHorizontal: PADDING,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  placeholder: {
+    width: '100%',
+    height: IMAGE_MAX_SIZE,
   },
   username: {
     fontWeight: '400',

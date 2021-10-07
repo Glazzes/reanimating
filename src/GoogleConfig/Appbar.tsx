@@ -43,37 +43,35 @@ const Appbar: React.FC<AppbarProps> = ({translateY}) => {
   });
 
   return (
-    <View>
-      <PaperAppbar.Header style={styles.appbar}>
-        <PaperAppbar.BackAction onPress={() => {}} color={'grey'} />
-        <View
-          style={styles.appbarContent}
-          onLayout={e => {
-            appBarContentWidth.value = e.nativeEvent.layout.width;
-          }}>
-          <Animated.Text
-            numberOfLines={1}
-            ellipsizeMode={'tail'}
-            style={[styles.title, rTextStyles]}>
-            Config. de Google
-          </Animated.Text>
-          <Animated.View style={[styles.iconBox, rIconBoxStyles]}>
-            <IconButton
-              style={styles.icon}
-              icon={'information'}
-              color={'grey'}
-              onPress={() => {}}
-            />
-            <IconButton
-              style={styles.icon}
-              icon={'dots-vertical'}
-              color={'grey'}
-              onPress={() => {}}
-            />
-          </Animated.View>
-        </View>
-      </PaperAppbar.Header>
-    </View>
+    <PaperAppbar.Header style={styles.appbar}>
+      <PaperAppbar.BackAction onPress={() => {}} color={'grey'} />
+      <View
+        style={styles.appbarContent}
+        onLayout={e => {
+          appBarContentWidth.value = e.nativeEvent.layout.width;
+        }}>
+        <Animated.Text
+          numberOfLines={1}
+          ellipsizeMode={'tail'}
+          style={[styles.title, rTextStyles]}>
+          Config. de Google
+        </Animated.Text>
+        <Animated.View style={[styles.iconBox, rIconBoxStyles]}>
+          <IconButton
+            style={styles.icon}
+            icon={'information'}
+            color={'grey'}
+            onPress={() => {}}
+          />
+          <IconButton
+            style={styles.icon}
+            icon={'dots-vertical'}
+            color={'grey'}
+            onPress={() => {}}
+          />
+        </Animated.View>
+      </View>
+    </PaperAppbar.Header>
   );
 };
 
@@ -83,7 +81,6 @@ const styles = StyleSheet.create({
   appbar: {
     backgroundColor: 'white',
     elevation: 0,
-    zIndex: 10,
   },
   appbarContent: {
     flexGrow: 1,

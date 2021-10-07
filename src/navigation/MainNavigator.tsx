@@ -3,6 +3,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerScreenParams} from './DrawerScreenParams';
 import GoogleConfig from '../GoogleConfig/GoogleConfig';
 import DrawerContent from './DrawerContent';
+import Testring from '../GoogleConfig/Testring';
 
 const Drawer = createDrawerNavigator<DrawerScreenParams>();
 
