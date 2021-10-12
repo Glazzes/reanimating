@@ -3,14 +3,14 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {DrawerScreenParams} from './DrawerScreenParams';
 import GoogleConfig from '../GoogleConfig/GoogleConfig';
 import DrawerContent from './DrawerContent';
-import Testring from '../GoogleConfig/Testring';
+import {TelegramProfile} from '../TelegramProfile';
 
 const Drawer = createDrawerNavigator<DrawerScreenParams>();
 
 const MainNavigator: React.FC = () => {
   return (
     <Drawer.Navigator
-      initialRouteName="GoogleConfig"
+      initialRouteName="TelegramProfile"
       drawerContent={({navigation}: {navigation: any}) => (
         <DrawerContent navigation={navigation} />
       )}
@@ -19,6 +19,7 @@ const MainNavigator: React.FC = () => {
         gestureEnabled: false,
       }}>
       <Drawer.Screen name="GoogleConfig" component={GoogleConfig} />
+      <Drawer.Screen name="TelegramProfile" component={TelegramProfile} />
     </Drawer.Navigator>
   );
 };

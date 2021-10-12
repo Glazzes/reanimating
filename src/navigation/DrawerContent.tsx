@@ -17,6 +17,10 @@ const DrawerContent: React.FC<DrawerContentProps> = ({navigation}) => {
         label="Google Configuration"
         onPress={() => navigation.navigate('GoogleConfig')}
       />
+      <Drawer.Item
+        label={'Telegram profile'}
+        onPress={() => navigation.navigate('TelegramProfile')}
+      />
     </DrawerContentScrollView>
   );
 };
