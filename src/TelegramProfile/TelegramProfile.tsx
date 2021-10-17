@@ -11,7 +11,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import ProfileImage from './ProfileImage';
-import PickPictureFAB from './PickPictureFAB';
 import Content from './Content';
 
 const {width} = Dimensions.get('window');
@@ -34,20 +33,26 @@ const TelegramProfile: React.FC = () => {
       translateY.value = ctx.y + event.translationY;
     },
     onEnd: _ => {
-      translateY.value = withTiming(0);
+      if (translateY.value < -THIRD) {
+        translateY.value = withTiming(-THIRD);
+      }
+
+      if (translateY.value > -THIRD) {
+        translateY.value = withTiming(0);
+      }
     },
   });
 
   return (
-    <PanGestureHandler onGestureEvent={onGestureEvent}>
-      <Animated.View style={styles.root}>
-        <Appbar />
-        <ProfileImage translateY={translateY} />
-        <PickPictureFAB translateY={translateY} />
-        <View style={styles.placeholder} />
-        <Content />
-      </Animated.View>
-    </PanGestureHandler>
+    <View style={styles.root}>
+      <Appbar />
+      <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <Animated.View>
+          <ProfileImage translateY={translateY} />
+          <Content />
+        </Animated.View>
+      </PanGestureHandler>
+    </View>
   );
 };
 
@@ -61,10 +66,5 @@ const styles = StyleSheet.create({
   image: {
     width,
     height: width,
-  },
-  placeholder: {
-    marginTop: 100,
-    flex: 1,
-    backgroundColor: 'salmon',
   },
 });

@@ -26,7 +26,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   root: {
-    zIndex: 100,
+    zIndex: 10000,
     position: 'absolute',
     width,
     top: 0,
@@ -41,5 +41,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignSelf: 'flex-end',
+    paddingHorizontal: 0,
+    marginHorizontal: 0,
   },
 });

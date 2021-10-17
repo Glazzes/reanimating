@@ -5,9 +5,12 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useDerivedValue,
+  useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import PickPictureFAB from './PickPictureFAB';
 import {HEIGHT_REDUCER, QUARTER, THIRD} from './TelegramProfile';
+import Username from './Username';
 
 type ProfileImageProps = {
   translateY: Animated.SharedValue<number>;
@@ -17,15 +20,17 @@ const FOX = require('./assets/fox.jpg');
 const {width} = Dimensions.get('window');
 
 const ProfileImage: React.FC<ProfileImageProps> = ({translateY}) => {
+  const fabSize = useSharedValue<number>(0);
+
   const containerStyles = useAnimatedStyle(() => {
     const height = interpolate(
       translateY.value,
-      [-150, 0, 80],
-      [width - 150, width, width + 80],
+      [-width + QUARTER, 0, QUARTER],
+      [QUARTER, width, width + QUARTER],
       Extrapolate.CLAMP,
     );
 
-    const elevation = translateY.value <= -110 ? 1 : 0;
+    const elevation = translateY.value <= -THIRD ? 1 : 0;
 
     return {height, elevation};
   });
@@ -35,7 +40,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({translateY}) => {
       return withTiming(HEIGHT_REDUCER);
     }
 
-    return withTiming(0);
+    return withTiming(0, {duration: 450});
   });
 
   const tresholdWidth = useDerivedValue(() => {
@@ -43,7 +48,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({translateY}) => {
       return withTiming(width / 4);
     }
 
-    return withTiming(width);
+    return withTiming(width, {duration: 250});
   }, []);
 
   const borderRadius = useDerivedValue(() => {
@@ -51,7 +56,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({translateY}) => {
       return withTiming(tresholdWidth.value / 2, {duration: 100});
     }
 
-    return withTiming(0);
+    return withTiming(0, {duration: 400});
   });
 
   const imageStyles = useAnimatedStyle(() => {
@@ -87,6 +92,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({translateY}) => {
   return (
     <Animated.View style={[styles.container, containerStyles]}>
       <Animated.Image source={FOX} style={imageStyles} />
+      <PickPictureFAB translateY={translateY} fabSize={fabSize} />
+      <Username fabSize={fabSize} translateY={translateY} />
     </Animated.View>
   );
 };
