@@ -21,6 +21,11 @@ const DrawerContent: React.FC<DrawerContentProps> = ({navigation}) => {
         label={'Telegram profile'}
         onPress={() => navigation.navigate('TelegramProfile')}
       />
+
+      <Drawer.Item
+        label={'Stories'}
+        onPress={() => navigation.navigate('Stories')}
+      />
     </DrawerContentScrollView>
   );
 };
