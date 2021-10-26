@@ -1,15 +1,10 @@
 import {LinearGradient} from 'expo-linear-gradient';
 import React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  View,
-  Image,
-  ListRenderItem,
-} from 'react-native';
+import {Dimensions, StyleSheet, View, Image} from 'react-native';
 import {
   FlingGestureHandlerGestureEvent,
   ScrollView,
+  State,
 } from 'react-native-gesture-handler';
 import {
   Directions,
@@ -32,38 +27,14 @@ const {width} = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.7;
 const ITEM_HEIGHT = width * 1.15;
 
-function keyExtractor(_, index: number): string {
-  return `story-${index}`;
-}
-
-function renderCell({index, style, children, ...props}) {
-  const newStyle = [style, {elevation: albums.length - index}];
-
-  return (
-    <View style={newStyle} {...props}>
-      {children}
-    </View>
-  );
-}
-
 const Albums = () => {
   const scrollX = useSharedValue<number>(0);
 
   const onLeftSwipe =
     useAnimatedGestureHandler<FlingGestureHandlerGestureEvent>({
       onActive: _ => {
-        if (scrollX.value < albums.length - 1) {
+        if (scrollX.value < albums.length) {
           const newValue = Math.floor(scrollX.value + 1);
-          scrollX.value = withSpring(newValue);
-        }
-      },
-    });
-
-  const onRightSwipe =
-    useAnimatedGestureHandler<FlingGestureHandlerGestureEvent>({
-      onActive: _ => {
-        if (scrollX.value > 0) {
-          const newValue = Math.floor(scrollX.value - 1);
           scrollX.value = withSpring(newValue);
         }
       },
@@ -83,31 +54,40 @@ const Albums = () => {
         tooltipColor={'#FF6e6e'}
       />
       <FlingGestureHandler
+        key={'left-swipe'}
         direction={Directions.LEFT}
         onGestureEvent={onLeftSwipe}>
-        <Animated.View>
+        <Animated.View style={styles.gestureContainer}>
           <FlingGestureHandler
+            key={'right-swipe'}
             direction={Directions.RIGHT}
-            onGestureEvent={onRightSwipe}>
-            <Animated.View style={styles.gestureContainer}>
-              <FlatList
-                horizontal={true}
-                scrollEnabled={false}
-                data={albums}
-                contentContainerStyle={styles.container}
-                keyExtractor={keyExtractor}
-                CellRendererComponent={renderCell}
-                renderItem={({
-                  item,
-                  index,
-                }: {
-                  item: AlbumData;
-                  index: number;
-                }) => {
-                  return <Album album={item} index={index} scrollX={scrollX} />;
-                }}
-              />
-            </Animated.View>
+            onHandlerStateChange={e => {
+              if (e.nativeEvent.state === State.END) {
+                if (scrollX.value > 0) {
+                  const newValue = Math.floor(scrollX.value - 1);
+                  scrollX.value = withSpring(newValue);
+                }
+              }
+            }}>
+            <FlatList
+              horizontal={true}
+              scrollEnabled={false}
+              data={albums}
+              contentContainerStyle={styles.container}
+              keyExtractor={(_, index) => `story-${index}`}
+              CellRendererComponent={({index, style, children, ...props}) => {
+                const newStyle = [style, {elevation: albums.length - index}];
+
+                return (
+                  <View style={newStyle} {...props}>
+                    {children}
+                  </View>
+                );
+              }}
+              renderItem={({item, index}: {item: AlbumData; index: number}) => {
+                return <Album album={item} index={index} scrollX={scrollX} />;
+              }}
+            />
           </FlingGestureHandler>
         </Animated.View>
       </FlingGestureHandler>

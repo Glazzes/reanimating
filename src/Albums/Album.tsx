@@ -12,7 +12,6 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import {AlbumData} from './data';
-import {LinearGradient} from 'expo-linear-gradient';
 
 type AlbumProps = {
   album: AlbumData;
@@ -53,10 +52,6 @@ const Album: React.FC<AlbumProps> = ({index, scrollX, album}) => {
         resizeMode={'cover'}
         style={{flex: 1}}>
         <View style={styles.container}>
-          <LinearGradient
-            colors={['transparent', 'rgba(0, 0, 0, 0.5)']}
-            style={StyleSheet.absoluteFillObject}
-          />
           <View style={styles.infoContainer}>
             <Text style={styles.albumTitle}>{album.title}</Text>
             <Text style={styles.tooltip}>Listen</Text>

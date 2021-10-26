@@ -9,6 +9,7 @@ buildscript {
         ndkVersion = "20.1.5948944"
     }
     repositories {
+        jcenter()
         google()
         mavenCentral()
     }
@@ -21,6 +22,7 @@ buildscript {
 
 allprojects {
     repositories {
+        jcenter()
         mavenCentral()
         mavenLocal()
         maven {

@@ -26,6 +26,16 @@ const DrawerContent: React.FC<DrawerContentProps> = ({navigation}) => {
         label={'Stories'}
         onPress={() => navigation.navigate('Stories')}
       />
+
+      <Drawer.Item
+        label={'Events'}
+        onPress={() => navigation.navigate('Events', {screen: 'Events'})}
+      />
+
+      <Drawer.Item
+        label={'Castle crashers (Dribble)'}
+        onPress={() => navigation.navigate('CastleCrashers')}
+      />
     </DrawerContentScrollView>
   );
 };

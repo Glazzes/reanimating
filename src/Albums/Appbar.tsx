@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignItems: 'center',
     elevation: 0,
-    height: 45,
+    height: 50,
   },
   container: {
     flex: 1,

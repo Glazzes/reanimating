@@ -10,6 +10,7 @@ export default function App() {
         backgroundColor={'rgba(0, 0, 0, 0.2)'}
         showHideTransition={'slide'}
         translucent={true}
+        hidden
       />
       <MainNavigator />
     </NavigationContainer>
